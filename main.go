@@ -2,18 +2,16 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"net/http"
 )
 
-type Student struct {
-	Name     string
-	Standard int `json:"Standard"`
-}
-
 func main() {
-	timeTrack := time.Now()
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Welcome to my website!")
+	})
 
-	fmt.Println("Hello me this test file")
+	fs := http.FileServer(http.Dir("static/"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	fmt.Println("Compile program: ", time.Since(timeTrack))
+	http.ListenAndServe(":8080", nil)
 }
